@@ -1,0 +1,8 @@
+*.exe
+*.git
+*.cmake
+CMakeFiles/
+test/
+CMakeCache.txt
+Makefile
+testexec

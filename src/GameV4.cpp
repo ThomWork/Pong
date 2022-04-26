@@ -103,7 +103,7 @@ void Game::initialiseObjects()
 void Game::initialiseText()
 {
 	sf::Font font;
-	if ( !font.loadFromFile( "/../src/DejaVuSans.ttf" ) )
+	if ( !font.loadFromFile( "../src/DejaVuSans.ttf" ) )
 	{
 		std::cout << "Error loading font" << std::endl;
 	}
