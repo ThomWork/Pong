@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SFML/Graphics.hpp"
-#include "SFML/System.hpp"
-#include "SFML/Window.hpp"
+#include "../libs/SFML/Graphics.hpp"
+#include "../libs/SFML/System.hpp"
+#include "../libs/SFML/Window.hpp"
 #include "PuckV4.cpp"
 #include "PaddleV4.cpp"
 
