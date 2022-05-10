@@ -3,6 +3,7 @@
 *.cmake
 CMakeFiles/
 test/
+SFML2/
 CMakeCache.txt
 Makefile
 testexec

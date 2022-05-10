@@ -1,4 +1,5 @@
-#include "../include/PaddleV4.h"
+//#include "../include/PaddleV4.h"
+#include "PaddleV4.h"
 
 void Paddle::initialise( int &x, int &y, int &paddleWidth, int &paddleHeight )
 {

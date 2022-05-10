@@ -1,4 +1,5 @@
-#include "../include/PuckV4.h"
+//#include "../include/PuckV4.h"
+#include "PuckV4.h"
 
 void Puck::initialise( int x, int y, int size )
 {
