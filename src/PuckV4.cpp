@@ -68,10 +68,7 @@ float Puck::getXPos()
 
 bool Puck::xIncreasing()
 {
-	if ( x_speed > 0 )
-		return true;
-	else
-		return false;
+	return (x_speed > 0);
 }
 
 void Puck::reset()
@@ -81,5 +78,6 @@ void Puck::reset()
 	
 	puckImage.setPosition( x_pos, y_pos );
 	
+	//x_speed = start_x_speed;
 	y_speed = start_y_speed;
 }

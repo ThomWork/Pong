@@ -85,15 +85,17 @@ void Game::initialiseObjects()
 	int puckStartY = ( this->videoMode.height - puckSize ) / 2;
 	puck.initialise( puckStartX , puckStartY , puckSize );
 	
-	// Paddle dimensions and positioning
+	// Paddle dimensions
 	int paddleWidth = 4;
 	int paddleHeight = 80;
 	int paddleGap = 6;
 	
+	// Left paddle positioning
 	int leftPaddleStartX = paddleGap;
 	int leftPaddleStartY = ( this->videoMode.height - paddleHeight ) / 2;
 	leftPaddle.initialise( leftPaddleStartX, leftPaddleStartY, paddleWidth, paddleHeight );
 	
+	// Right paddle positioning
 	int rightPaddleStartX = this->videoMode.width - paddleGap - paddleWidth;
 	int rightPaddleStartY = leftPaddleStartY;
 	rightPaddle.initialise( rightPaddleStartX, rightPaddleStartY, paddleWidth, paddleHeight );
@@ -102,6 +104,8 @@ void Game::initialiseObjects()
 
 void Game::initialiseText()
 {
+	// Load font
+	
 	sf::Font font;
 	if ( !font.loadFromFile( "src/DejaVuSans.ttf" ) )
 	{
@@ -148,6 +152,7 @@ void Game::userInput()
 
 void Game::pollEvents()
 {
+	// Various controls
 	while( this->window->pollEvent( this->ev ) )
 	{
 		switch ( this->ev.type )
@@ -168,6 +173,7 @@ void Game::pollEvents()
 
 void Game::sleepCheck()
 {
+	// Function to pause game after goal and puck is reset
 	if ( goalScored )
 	{
 		sf::sleep( sf::seconds( 1 ) );
@@ -187,6 +193,8 @@ void Game::updateCollisions()
 
 void Game::checkPaddlePuckCollision()
 {
+	// Check which paddle will have a collision based on puck direction
+	
 	if ( !puck.xIncreasing() )
 		paddlePuckCollision( leftPaddle );
 	else
@@ -195,6 +203,8 @@ void Game::checkPaddlePuckCollision()
 
 void Game::paddlePuckCollision( Paddle &pad )
 {
+	// Check for puck-paddle collision
+	
 	if ( pad.getPaddleImage().getGlobalBounds().intersects( this->puck.getPuckImage().getGlobalBounds() ) )
 		this->puck.paddleCollision( pad.getPaddleImage() );
 }
@@ -202,8 +212,9 @@ void Game::paddlePuckCollision( Paddle &pad )
 void Game::checkGoal()
 {
 	float goalline_left = 0.f;
-	float goalline_right = this->window->getSize().x + 5.0f;
+	float goalline_right = this->window->getSize().x;
 	
+	// Somewhat complex goalline check
 	if ( puck.getXPos() < goalline_left || puck.getXPos() > goalline_right )
 	{
 		if ( !puck.xIncreasing() )

@@ -9,7 +9,7 @@ public:
 	void paddleCollision( const sf::RectangleShape &paddle );
 	const sf::RectangleShape getPuckImage() const;
 	float getXPos();
-	bool xIncreasing();
+	bool xIncreasing();	// Is the puck speed positive or negative
 	void reset();
 
 private:
