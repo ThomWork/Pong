@@ -1,8 +1,8 @@
 #include <iostream>
-#include "../src/GameV4.cpp"
+#include "PongV4.cpp"
 
-// g++ PongV4.cpp -o PongV4.exe -L../libs/SFML -lsfml-graphics -lsfml-window -lsfml-system
-// ./PongV4.exe
+// g++ main.cpp -o main.exe -L../libs/SFML -lsfml-graphics -lsfml-window -lsfml-system
+// ./main.exe
 
 int main()
 {

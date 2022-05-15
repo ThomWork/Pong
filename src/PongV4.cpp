@@ -6,7 +6,7 @@
 
 #include "PuckV4.cpp"
 #include "PaddleV4.cpp"
-#include "GameV4.h"
+#include "PongV4.h"
 
 Game::Game()
 {
