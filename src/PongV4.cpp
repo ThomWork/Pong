@@ -8,7 +8,7 @@
 #include "PaddleV4.cpp"
 #include "PongV4.h"
 
-Game::Game()
+Pong::Pong()
 {
 	this->initialiseVariables();
 	this->initialiseWindow();
@@ -16,31 +16,31 @@ Game::Game()
 	this->initialiseText();
 }
 
-Game::~Game()
+Pong::~Pong()
 {
 	delete this->window;
 }
 
-const bool Game::running() const
+const bool Pong::running() const
 {
 	return this->window->isOpen();
 }
 
-void Game::actions()
+void Pong::actions()
 {
 	this->puck.movement();
 	this->userInput();
 }
 
-void Game::update()
+void Pong::update()
 {
 	this->sleepCheck();
 	this->updateCollisions();
-	this->checkGoal();
-	
+	this->checkGoalScored();
+	this->checkGameOver();
 }
 
-void Game::render()
+void Pong::render()
 {
 	/* Renders the game objects
 	 * 
@@ -60,15 +60,21 @@ void Game::render()
 	this->window->draw( this->leftPaddle.getScoreText() );
 	this->window->draw( this->rightPaddle.getScoreText() );
 	
+	if ( game_over )
+	{
+		this->window->draw( this->winner_text );
+		this->window->draw( this->restart_text );
+	}
+	
 	this->window->display();
 }
 
-void Game::initialiseVariables()
+void Pong::initialiseVariables()
 {
 	this->window = nullptr;
 }
 
-void Game::initialiseWindow()
+void Pong::initialiseWindow()
 {
 	this->videoMode.width = 800;
 	this->videoMode.height = 600;
@@ -77,7 +83,7 @@ void Game::initialiseWindow()
 	this->window->setFramerateLimit(60);
 }
 
-void Game::initialiseObjects()
+void Pong::initialiseObjects()
 {
 	// Puck size and positioning
 	int puckSize = 6;
@@ -102,11 +108,10 @@ void Game::initialiseObjects()
 	
 }
 
-void Game::initialiseText()
+void Pong::initialiseText()
 {
 	// Load font
 	
-	sf::Font font;
 	if ( !font.loadFromFile( "src/DejaVuSans.ttf" ) )
 	{
 		std::cout << "Error loading font" << std::endl;
@@ -117,7 +122,7 @@ void Game::initialiseText()
 	textPositioning( score_text );
 }
 
-void Game::textFormatting( sf::Font &font, sf::Text &score_text )
+void Pong::textFormatting( sf::Font& font, sf::Text& score_text )
 {
 	score_text.setFont( font );
 	score_text.setString( "0" );
@@ -127,11 +132,15 @@ void Game::textFormatting( sf::Font &font, sf::Text &score_text )
 	
 	leftPaddle.textFormatting( font, score_text );
 	rightPaddle.textFormatting( font, score_text );
+	
+	winner_text = score_text;
+	restart_text = score_text;
+	restart_text.setString( "Press r to restart or Esc to exit" );
 }
 
-void Game::textPositioning( sf::Text &score_text )
+void Pong::textPositioning( sf::Text& score_text )
 {
-	float gap = 20.f;
+	float gap = 30.f;
 	float centre = ( this->videoMode.width - score_text.getGlobalBounds().width )/2 ;
 	
 	float left_score_x = centre - gap;
@@ -141,16 +150,19 @@ void Game::textPositioning( sf::Text &score_text )
 	float right_score_x = centre + gap;
 	float right_score_y = gap;
 	rightPaddle.textPositioning( right_score_x , right_score_y );
+	
+	winner_text.setPosition( 0 , this->videoMode.height/2 - 50.f);
+	restart_text.setPosition( 0 , this->videoMode.height/2 + 50.f );
 }
 
-void Game::userInput()
+void Pong::userInput()
 {
 	this->rightPaddle.userMovement();
 	this->leftPaddle.userMovement();
 	this->pollEvents();
 }
 
-void Game::pollEvents()
+void Pong::pollEvents()
 {
 	// Various controls
 	while( this->window->pollEvent( this->ev ) )
@@ -167,21 +179,19 @@ void Game::pollEvents()
 		}
 	}
 	
-	if ( sf::Keyboard::isKeyPressed(sf::Keyboard::R) )
-		this->reset();
 }
 
-void Game::sleepCheck()
+void Pong::sleepCheck()
 {
-	// Function to pause game after goal and puck is reset
-	if ( goalScored )
+	// Function to pause game after goal
+	if ( time_to_sleep )
 	{
 		sf::sleep( sf::seconds( 1 ) );
-		goalScored = false;
+		time_to_sleep = false;
 	}
 }
 
-void Game::updateCollisions()
+void Pong::updateCollisions()
 {
 	this->puck.updateWindowTopBottomCollision( window );
 	
@@ -191,7 +201,7 @@ void Game::updateCollisions()
 	this->checkPaddlePuckCollision();
 }
 
-void Game::checkPaddlePuckCollision()
+void Pong::checkPaddlePuckCollision()
 {
 	// Check which paddle will have a collision based on puck direction
 	
@@ -201,7 +211,7 @@ void Game::checkPaddlePuckCollision()
 		paddlePuckCollision( rightPaddle );
 }
 
-void Game::paddlePuckCollision( Paddle &pad )
+void Pong::paddlePuckCollision( Paddle& pad )
 {
 	// Check for puck-paddle collision
 	
@@ -209,7 +219,7 @@ void Game::paddlePuckCollision( Paddle &pad )
 		this->puck.paddleCollision( pad.getPaddleImage() );
 }
 
-void Game::checkGoal()
+void Pong::checkGoalScored()
 {
 	float goalline_left = 0.f;
 	float goalline_right = this->window->getSize().x;
@@ -217,20 +227,63 @@ void Game::checkGoal()
 	// Somewhat complex goalline check
 	if ( puck.getXPos() < goalline_left || puck.getXPos() > goalline_right )
 	{
-		if ( !puck.xIncreasing() )
-			rightPaddle.scored();
-		else
+		if ( puck.xIncreasing() )
 			leftPaddle.scored();
+		else
+			rightPaddle.scored();
 		
 		this->reset();
-		goalScored = true;
+		time_to_sleep = true;
 	}
 }
 
-void Game::reset()
+void Pong::reset()
 {
 	puck.reset();
 	leftPaddle.reset();
 	rightPaddle.reset();
 }
 
+void Pong::checkGameOver()
+{
+	if ( rightPaddle.getScore() == gamePoint )
+	{
+		winner_text.setString( "Right player wins!" );
+		game_over = true;
+		this->render();
+	}
+	
+	if ( leftPaddle.getScore() == gamePoint )
+	{
+		winner_text.setString( "Left player wins!" );
+		game_over = true;
+		this->render();
+	}
+	
+	gameOverOptions();
+}
+
+void Pong::gameOverOptions()
+{
+	while ( game_over )
+	{
+		if ( sf::Keyboard::isKeyPressed(sf::Keyboard::R) )
+		{
+			restartGame();
+			game_over = false;
+		}
+		
+		if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) )
+		{
+			this->window->close();
+			game_over = false;	// Game is obviously over but use this to escape while-loop
+		}
+	}
+}
+
+void Pong::restartGame()
+{
+	leftPaddle.resetScore();
+	rightPaddle.resetScore();
+	reset();
+}

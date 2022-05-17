@@ -7,19 +7,19 @@
 int main()
 {
 	// Init game engine
-	Game game;
+	Pong pong;
 	
 	// This is the game loop
-	while ( game.running() )
+	while ( pong.running() )
 	{		
-		// Actions in game
-		game.actions();
+		// Actions in game events
+		pong.actions();
 		
 		// Update the game
-		game.update();
+		pong.update();
 		
-		// Render the objects
-		game.render();
+		// Render/draw the objects
+		pong.render();
 	}
 	
 	return 0;

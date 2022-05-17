@@ -1,12 +1,12 @@
 #pragma once
 
-class Game
+class Pong
 {
 
 public:
 	// Constructor and destructor
-	Game();
-	virtual ~Game();
+	Pong();
+	virtual ~Pong();
 	
 	// Accessors
 	const bool running() const;
@@ -30,8 +30,11 @@ private:
 	void initialiseText();
 	
 	// Text
-	void textFormatting( sf::Font &font, sf::Text &score_text );
-	void textPositioning( sf::Text &score_text );
+	void textFormatting( sf::Font& font, sf::Text& score_text );
+	void textPositioning( sf::Text& score_text );
+	sf::Font font;
+	sf::Text winner_text;
+	sf::Text restart_text;
 	
 	// 
 	void userInput();
@@ -41,14 +44,22 @@ private:
 	// Collisions
 	void updateCollisions();
 	void checkPaddlePuckCollision();
-	void paddlePuckCollision( Paddle &pad );
+	void paddlePuckCollision( Paddle& pad );
 	
-	// 
-	void checkGoal();
+	// Points
+	void checkGoalScored();
+	bool checkGoalline( float& goalline , float one );
 	void reset();
+	void checkGameOver();
+	void gameOverOptions();
+	void restartGame();
 	
 	// Variables
-	bool goalScored = false;
+	bool time_to_sleep = false;
+	bool game_over = false;
+	
+	// Game points
+	const int gamePoint = 1;
 	
 	// Window
 	sf::RenderWindow* window;

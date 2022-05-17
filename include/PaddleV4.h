@@ -6,18 +6,20 @@ class Paddle
 {
 public:
 	// Initialising
-	void initialise( int &x, int &y, int &paddleWidth, int &paddleHeight );
+	void initialise( int& x, int& y, int& paddleWidth, int& paddleHeight );
 	// Text
-	void textFormatting( sf::Font &_font, sf::Text &score_text );
-	void textPositioning( float &score_text_x, float &score_text_y );
+	void textFormatting( sf::Font& _font, sf::Text& score_text );
+	void textPositioning( float& score_text_x, float& score_text_y );
 	const sf::Text getScoreText() const;
 	// 
 	const sf::RectangleShape getPaddleImage() const;
 	void userMovement();
 	void updateWindowBoundsCollision( const sf::RenderWindow* window );
+	//
 	void scored();
 	int getScore();
 	void reset();
+	void resetScore();
 	
 	
 private:
@@ -44,6 +46,6 @@ private:
 	void verticalMovement();
 	
 	// Window collision
-	void topWindowCollision( const sf::RenderWindow* window , sf::FloatRect &paddleBounds );
-	void bottomWindowCollision( const sf::RenderWindow* window , sf::FloatRect &paddleBounds );
+	void topWindowCollision( const sf::RenderWindow* window , sf::FloatRect& paddleBounds );
+	void bottomWindowCollision( const sf::RenderWindow* window , sf::FloatRect& paddleBounds );
 };

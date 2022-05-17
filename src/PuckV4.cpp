@@ -1,7 +1,6 @@
-//#include "../include/PuckV4.h"
 #include "PuckV4.h"
 
-void Puck::initialise( int x, int y, int size )
+void Puck::initialise( int& x, int& y, int& size )
 {
 	float puck_size = (float)size;
 	
@@ -40,7 +39,7 @@ void Puck::updateWindowTopBottomCollision( const sf::RenderWindow* window )
 	}
 }
 
-void Puck::paddleCollision( const sf::RectangleShape &paddle )
+void Puck::paddleCollision( const sf::RectangleShape& paddle )
 {
 	sf::FloatRect paddleBounds = paddle.getGlobalBounds();
 	float midPaddle = paddleBounds.top + paddleBounds.height/2.0;

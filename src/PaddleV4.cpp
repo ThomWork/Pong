@@ -1,7 +1,6 @@
-//#include "../include/PaddleV4.h"
 #include "PaddleV4.h"
 
-void Paddle::initialise( int &x, int &y, int &paddleWidth, int &paddleHeight )
+void Paddle::initialise( int& x, int& y, int& paddleWidth, int& paddleHeight )
 {
 	// Starting position
 	start_x_pos = (float)x;
@@ -15,14 +14,14 @@ void Paddle::initialise( int &x, int &y, int &paddleWidth, int &paddleHeight )
 	paddleImage.setFillColor( sf::Color::Cyan );
 }
 
-void Paddle::textFormatting( sf::Font &_font, sf::Text &score_text )
+void Paddle::textFormatting( sf::Font& _font, sf::Text& score_text )
 {
 	font = _font;
 	score = score_text;
 	score.setFont( font );
 }
 
-void Paddle::textPositioning( float &score_text_x, float &score_text_y )
+void Paddle::textPositioning( float& score_text_x, float& score_text_y )
 {
 	points = 0;
 	score.setPosition( score_text_x, score_text_y );
@@ -79,7 +78,7 @@ void Paddle::updateWindowBoundsCollision( const sf::RenderWindow* window )
 	bottomWindowCollision( window , paddleBounds );
 }
 
-void Paddle::topWindowCollision( const sf::RenderWindow* window , sf::FloatRect &paddleBounds )
+void Paddle::topWindowCollision( const sf::RenderWindow* window , sf::FloatRect& paddleBounds )
 {
 	if ( paddleBounds.top <= 0.0f )
 	{
@@ -88,7 +87,7 @@ void Paddle::topWindowCollision( const sf::RenderWindow* window , sf::FloatRect 
 	}
 }
 
-void Paddle::bottomWindowCollision( const sf::RenderWindow* window , sf::FloatRect &paddleBounds )
+void Paddle::bottomWindowCollision( const sf::RenderWindow* window , sf::FloatRect& paddleBounds )
 {
 	if ( paddleBounds.top + paddleBounds.height >= window->getSize().y )
 	{
@@ -118,4 +117,10 @@ void Paddle::reset()
 	y_pos = start_y_pos;
 	
 	paddleImage.setPosition( x_pos, y_pos );
+}
+
+void Paddle::resetScore()
+{
+	points = 0;
+	score.setString("0");
 }
