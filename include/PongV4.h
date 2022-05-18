@@ -51,7 +51,7 @@ private:
 	bool checkGoalline( float& goalline , float one );
 	void reset();
 	void checkGameOver();
-	void gameOverOptions();
+	void gameOverControls();
 	void restartGame();
 	
 	// Variables
@@ -59,7 +59,7 @@ private:
 	bool game_over = false;
 	
 	// Game points
-	const int gamePoint = 1;
+	const int gamePoint = 11;
 	
 	// Window
 	sf::RenderWindow* window;

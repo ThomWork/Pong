@@ -183,7 +183,7 @@ void Pong::pollEvents()
 
 void Pong::sleepCheck()
 {
-	// Function to pause game after goal
+	// Function to pause/sleep game after goal
 	if ( time_to_sleep )
 	{
 		sf::sleep( sf::seconds( 1 ) );
@@ -225,6 +225,7 @@ void Pong::checkGoalScored()
 	float goalline_right = this->window->getSize().x;
 	
 	// Somewhat complex goalline check
+	// Check which player scored based on direction puck is going
 	if ( puck.getXPos() < goalline_left || puck.getXPos() > goalline_right )
 	{
 		if ( puck.xIncreasing() )
@@ -260,10 +261,10 @@ void Pong::checkGameOver()
 		this->render();
 	}
 	
-	gameOverOptions();
+	gameOverControls();
 }
 
-void Pong::gameOverOptions()
+void Pong::gameOverControls()
 {
 	while ( game_over )
 	{
